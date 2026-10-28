@@ -1,0 +1,72 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --royal-burgundy: #1a030e;
+  --royal-burgundy-soft: #2b0a1c;
+  --royal-gold: #d4af37;
+  --royal-gold-light: #f4e8c1;
+  --royal-obsidian: #0a0a0a;
+  --royal-ivory: #fafafa;
+  --royal-muted: #e8d7a8;
+  --royal-panel: #170910;
+  --royal-border: #5b3b2c;
+  --royal-glass: rgba(255, 255, 255, 0.06);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  background: var(--royal-burgundy);
+  color: var(--royal-ivory);
+  font-family: var(--font-inter), sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-cinzel), serif;
+}
+
+::selection {
+  background: rgba(212, 175, 55, 0.25);
+  color: #fff;
+}
+
+@layer base {
+  * {
+    @apply border-royal-border/40;
+  }
+
+  a {
+    @apply transition-colors duration-200;
+  }
+
+  a:hover {
+    @apply text-royal-goldLight;
+  }
+}
+
+@layer components {
+  .royal-surface {
+    @apply border border-royal-border/50 bg-white/5 shadow-royal backdrop-blur-xl;
+  }
+
+  .gold-shimmer {
+    background-image: linear-gradient(
+      120deg,
+      rgba(255,255,255,0) 20%,
+      rgba(244, 232, 193, 0.7) 50%,
+      rgba(255,255,255,0) 80%
+    );
+    background-size: 240% 100%;
+    animation: shimmer 5s linear infinite;
+  }
+}
