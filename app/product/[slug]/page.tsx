@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { getProductBySlug } from '@/lib/storefront-data';
+import { CONTACT_PHONE, CONTACT_WHATSAPP, getProductBySlug } from '@/lib/storefront-data';
 import { formatCurrency } from '@/lib/utils';
 
 export default function ProductDetailPage({ params }: { params: { slug: string } }) {
@@ -14,12 +14,12 @@ export default function ProductDetailPage({ params }: { params: { slug: string }
     <main className="min-h-screen px-4 py-8 text-royal-ivory md:px-8">
       <div className="mx-auto max-w-6xl rounded-[28px] border border-royal-border/60 bg-white/5 p-6 md:p-8">
         <div className="grid gap-8 md:grid-cols-2">
-          <div className="rounded-[24px] border border-royal-border/60 bg-[radial-gradient(circle_at_top,_rgba(212,175,55,0.22),_transparent_26%),linear-gradient(135deg,#2a1018,#13070d)] p-6">
-            <div className="flex h-[420px] items-end justify-between rounded-[18px] border border-royal-gold/35 bg-[rgba(0,0,0,0.16)] p-6">
-              <span className="rounded-full border border-royal-gold/45 bg-royal-gold/10 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-royal-goldLight">
-                {product.categorySlug}
-              </span>
-              <span className="text-sm text-royal-goldLight">★ {product.rating}</span>
+          <div className="space-y-4">
+            <div className="h-[420px] rounded-[22px] border border-royal-border/60 bg-cover bg-center" style={{ backgroundImage: `url('${product.imageUrl}')` }} />
+            <div className="grid grid-cols-2 gap-4">
+              {product.images.slice(0, 2).map((image) => (
+                <div key={image} className="h-32 rounded-[18px] border border-royal-border/60 bg-cover bg-center" style={{ backgroundImage: `url('${image}')` }} />
+              ))}
             </div>
           </div>
 
@@ -34,21 +34,21 @@ export default function ProductDetailPage({ params }: { params: { slug: string }
             </div>
 
             <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="/checkout" className="rounded-full bg-gold-gradient px-5 py-3 text-sm font-semibold text-royal-burgundy">
-                Add to cart
-              </Link>
-              <Link href="/shop" className="rounded-full border border-royal-gold/45 bg-royal-gold/10 px-5 py-3 text-sm font-semibold text-royal-goldLight">
-                Continue shopping
-              </Link>
+              <a href={`tel:${CONTACT_PHONE}`} className="rounded-full bg-gold-gradient px-5 py-3 text-sm font-semibold text-royal-burgundy">Contact to buy</a>
+              <a href={CONTACT_WHATSAPP} target="_blank" rel="noreferrer" className="rounded-full border border-royal-gold/45 bg-white/5 px-5 py-3 text-sm font-semibold text-royal-ivory">Chat on WhatsApp</a>
             </div>
 
             <div className="mt-8 rounded-[20px] border border-royal-border/60 bg-white/5 p-5 text-sm leading-7 text-royal-muted">
-              <p className="font-medium text-royal-ivory">Included:</p>
+              <p className="font-medium text-royal-ivory">Product specifications</p>
               <ul className="mt-2 space-y-2">
-                <li>• Premium gift-ready presentation</li>
-                <li>• Royal concierge assistance</li>
-                <li>• Secure checkout and insured delivery</li>
+                {product.specs.map((spec) => (
+                  <li key={spec.label}><span className="text-royal-goldLight">{spec.label}:</span> {spec.value}</li>
+                ))}
               </ul>
+            </div>
+
+            <div className="mt-6 flex gap-3">
+              <Link href="/shop" className="rounded-full border border-royal-gold/45 bg-royal-gold/10 px-4 py-2 text-sm text-royal-goldLight">Continue shopping</Link>
             </div>
           </div>
         </div>

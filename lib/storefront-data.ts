@@ -1,49 +1,88 @@
-import { PrismaClient } from '@prisma/client';
+export const CONTACT_PHONE = process.env.NEXT_PUBLIC_CONTACT_PHONE || '+971 50 000 0000';
+export const CONTACT_WHATSAPP = `https://wa.me/${CONTACT_PHONE.replace(/\D/g, '')}`;
+export const CONTACT_EMAIL = process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'hello@royalskingdom.com';
 
-const categories = [
+export type ProductSpec = {
+  label: string;
+  value: string;
+};
+
+export type Category = {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  imageUrl: string;
+  isActive: boolean;
+  accent: string;
+};
+
+export type Product = {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  price: number;
+  compareAt?: number;
+  categorySlug: string;
+  imageUrl: string;
+  images: string[];
+  status: 'ACTIVE' | 'ARCHIVED' | 'DRAFT';
+  featured: boolean;
+  rating: number;
+  reviewCount: number;
+  specs: ProductSpec[];
+};
+
+const categories: Category[] = [
   {
     id: 'cat-fashion',
     name: 'Fashion',
     slug: 'fashion',
     description: 'Luxury tailoring and grand looks for every occasion.',
-    imageUrl: '/images/fashion.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1200&q=80',
     isActive: true,
+    accent: 'Regal silhouettes',
   },
   {
     id: 'cat-jewelry',
     name: 'Jewelry',
     slug: 'jewelry',
     description: 'Heirloom pieces and statement gold for your royal wardrobe.',
-    imageUrl: '/images/jewelry.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1617038220319-276d3cfab638?auto=format&fit=crop&w=1200&q=80',
     isActive: true,
+    accent: 'Limited editions',
   },
   {
     id: 'cat-home',
     name: 'Home',
     slug: 'home',
     description: 'Elevated pieces for refined interiors and daily rituals.',
-    imageUrl: '/images/home.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80',
     isActive: true,
+    accent: 'Curated essentials',
   },
   {
     id: 'cat-accessories',
     name: 'Accessories',
     slug: 'accessories',
     description: 'Final touches that sharpen every luxurious presence.',
-    imageUrl: '/images/accessories.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&w=1200&q=80',
     isActive: true,
+    accent: 'Statement finishing',
   },
   {
-    id: 'cat-empty',
+    id: 'cat-archive',
     name: 'Archive',
     slug: 'archive',
     description: 'Former collection currently not available for purchase.',
-    imageUrl: '/images/archive.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&q=80',
     isActive: true,
+    accent: 'Private access',
   },
 ];
 
-const products = [
+const products: Product[] = [
   {
     id: 'prod-1',
     name: 'Velvet Crown Set',
@@ -52,12 +91,20 @@ const products = [
     price: 1280,
     compareAt: 1499,
     categorySlug: 'fashion',
-    imageUrl: '/images/velvet-crown.jpg',
-    images: ['/images/velvet-crown.jpg', '/images/velvet-crown-alt.jpg'],
+    imageUrl: 'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1200&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&q=80',
+    ],
     status: 'ACTIVE',
     featured: true,
     rating: 4.9,
     reviewCount: 318,
+    specs: [
+      { label: 'Material', value: 'Silk blend with velvet trim' },
+      { label: 'Fit', value: 'Tailored luxury fit' },
+      { label: 'Origin', value: 'Made in limited artisan batch' },
+    ],
   },
   {
     id: 'prod-2',
@@ -67,12 +114,20 @@ const products = [
     price: 860,
     compareAt: 990,
     categorySlug: 'jewelry',
-    imageUrl: '/images/gold-signet.jpg',
-    images: ['/images/gold-signet.jpg'],
+    imageUrl: 'https://images.unsplash.com/photo-1617038220319-276d3cfab638?auto=format&fit=crop&w=1200&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1617038220319-276d3cfab638?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1535632787350-4e68ef0ac584?auto=format&fit=crop&w=1200&q=80',
+    ],
     status: 'ACTIVE',
     featured: true,
     rating: 5,
     reviewCount: 244,
+    specs: [
+      { label: 'Material', value: '18k gold plated finish' },
+      { label: 'Weight', value: '120g' },
+      { label: 'Packaging', value: 'Luxury gift box included' },
+    ],
   },
   {
     id: 'prod-3',
@@ -82,12 +137,20 @@ const products = [
     price: 640,
     compareAt: 760,
     categorySlug: 'home',
-    imageUrl: '/images/residence-lamp.jpg',
-    images: ['/images/residence-lamp.jpg'],
+    imageUrl: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1200&q=80',
+    ],
     status: 'ACTIVE',
     featured: false,
     rating: 4.8,
     reviewCount: 162,
+    specs: [
+      { label: 'Material', value: 'Brushed metal and silk shade' },
+      { label: 'Finish', value: 'Champagne gold' },
+      { label: 'Power', value: 'Warm ambient LED lighting' },
+    ],
   },
   {
     id: 'prod-4',
@@ -97,12 +160,20 @@ const products = [
     price: 1180,
     compareAt: 1380,
     categorySlug: 'accessories',
-    imageUrl: '/images/leather-trunk.jpg',
-    images: ['/images/leather-trunk.jpg'],
+    imageUrl: 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&w=1200&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=1200&q=80',
+    ],
     status: 'ACTIVE',
     featured: true,
     rating: 4.9,
     reviewCount: 201,
+    specs: [
+      { label: 'Material', value: 'Italian leather' },
+      { label: 'Storage', value: 'Dual-compartment interior' },
+      { label: 'Style', value: 'Made for heritage travel' },
+    ],
   },
   {
     id: 'prod-5',
@@ -112,12 +183,20 @@ const products = [
     price: 1790,
     compareAt: 1990,
     categorySlug: 'fashion',
-    imageUrl: '/images/nocturne-watch.jpg',
-    images: ['/images/nocturne-watch.jpg'],
+    imageUrl: 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&w=1200&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?auto=format&fit=crop&w=1200&q=80',
+    ],
     status: 'ACTIVE',
     featured: false,
     rating: 4.7,
     reviewCount: 97,
+    specs: [
+      { label: 'Movement', value: 'Swiss quartz precision' },
+      { label: 'Case', value: 'Polished gold tone case' },
+      { label: 'Water resistance', value: '5 ATM' },
+    ],
   },
   {
     id: 'prod-6',
@@ -127,12 +206,20 @@ const products = [
     price: 340,
     compareAt: 420,
     categorySlug: 'home',
-    imageUrl: '/images/cinder-rose.jpg',
-    images: ['/images/cinder-rose.jpg'],
+    imageUrl: 'https://images.unsplash.com/photo-1523293182086-7651a899d37f?auto=format&fit=crop&w=1200&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1523293182086-7651a899d37f?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1556228578-8c89e6adf883?auto=format&fit=crop&w=1200&q=80',
+    ],
     status: 'ACTIVE',
     featured: false,
     rating: 4.8,
     reviewCount: 110,
+    specs: [
+      { label: 'Fragrance family', value: 'Floral woody amber' },
+      { label: 'Volume', value: '100ml' },
+      { label: 'Mood', value: 'Warm and ceremonial' },
+    ],
   },
   {
     id: 'prod-7',
@@ -142,12 +229,20 @@ const products = [
     price: 250,
     compareAt: 320,
     categorySlug: 'accessories',
-    imageUrl: '/images/silk-scarf.jpg',
-    images: ['/images/silk-scarf.jpg'],
+    imageUrl: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=1200&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=1200&q=80',
+    ],
     status: 'ACTIVE',
     featured: false,
     rating: 4.6,
     reviewCount: 74,
+    specs: [
+      { label: 'Material', value: 'Premium silk blend' },
+      { label: 'Finish', value: 'Hand-rolled edges' },
+      { label: 'Care', value: 'Dry clean recommended' },
+    ],
   },
   {
     id: 'prod-8',
@@ -157,20 +252,23 @@ const products = [
     price: 560,
     compareAt: 680,
     categorySlug: 'archive',
-    imageUrl: '/images/baguette-kit.jpg',
-    images: ['/images/baguette-kit.jpg'],
+    imageUrl: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=1200&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=1200&q=80',
+    ],
     status: 'ARCHIVED',
     featured: false,
     rating: 4.4,
     reviewCount: 32,
+    specs: [
+      { label: 'Status', value: 'Private archive release' },
+      { label: 'Availability', value: 'Not currently for sale' },
+    ],
   },
 ];
 
-export type Product = (typeof products)[number];
-export type Category = (typeof categories)[number];
-
 export function getAllCategories() {
-  return categories;
+  return categories.filter((category) => category.isActive);
 }
 
 export function getActiveCategoriesWithProducts() {
