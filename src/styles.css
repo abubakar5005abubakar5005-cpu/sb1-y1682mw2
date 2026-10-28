@@ -1,0 +1,337 @@
+import { useMemo, useState } from 'react';
+
+const metrics = [
+  { label: 'Average response time', value: '142ms', delta: '+28%', tone: 'good' },
+  { label: 'Security score', value: '99.97%', delta: '+0.6%', tone: 'good' },
+  { label: 'Global uptime', value: '99.99%', delta: '+0.2%', tone: 'good' },
+  { label: 'Automation coverage', value: '83%', delta: '+12%', tone: 'accent' },
+];
+
+const tabs = [
+  { id: 'overview', label: 'Overview' },
+  { id: 'operations', label: 'Operations' },
+  { id: 'security', label: 'Security' },
+  { id: 'intelligence', label: 'Intelligence' },
+];
+
+const featureData = {
+  overview: [
+    {
+      title: 'Unified control plane',
+      description: 'Operational visibility across environments without losing signal in noisy dashboards.',
+      tag: 'Live',
+    },
+    {
+      title: 'Priority routing',
+      description: 'Task queues adapt automatically to urgency, risk, and business impact.',
+      tag: 'Auto',
+    },
+    {
+      title: 'Secure by default',
+      description: 'Granular permissions, encryption, and policy boundaries built into every workflow.',
+      tag: 'Zero trust',
+    },
+  ],
+  operations: [
+    {
+      title: 'Workflow orchestration',
+      description: 'Coordinate approvals, service checks, and incident runbooks from one operational layer.',
+      tag: 'Orchestrate',
+    },
+    {
+      title: 'Smart alerts',
+      description: 'Noise reduction combines user impact, service topology, and historical incident context.',
+      tag: 'Alerting',
+    },
+    {
+      title: 'Release readiness',
+      description: 'Confidence checks flag deployment risk before production workload changes are promoted.',
+      tag: 'Ready',
+    },
+  ],
+  security: [
+    {
+      title: 'Identity guardrails',
+      description: 'Session and policy rules continuously validate user roles, authenticators, and access scope.',
+      tag: 'IAM',
+    },
+    {
+      title: 'Threat modeling',
+      description: 'Continuous analysis of patterns, abuse indicators, and abnormal service activity.',
+      tag: 'Monitor',
+    },
+    {
+      title: 'Recovery assurance',
+      description: 'Rollback logic and break-glass procedures are tested before production incidents escalate.',
+      tag: 'Resilient',
+    },
+  ],
+  intelligence: [
+    {
+      title: 'Predictive insight',
+      description: 'Analysis surfaces likely failures and the most likely recovery paths before users notice.',
+      tag: 'AI',
+    },
+    {
+      title: 'Outcome tracking',
+      description: 'Continuous KPI reporting shows whether throughput, quality, and reliability improve over time.',
+      tag: 'KPIs',
+    },
+    {
+      title: 'Root cause clarity',
+      description: 'Timeline stitching and context correlation reduce mean time to understand and resolve issues.',
+      tag: 'Trace',
+    },
+  ],
+};
+
+const timeline = [
+  { time: '09:00', title: 'Production sync', text: 'Registry and dependency checks completed without drift.', status: 'ok' },
+  { time: '11:25', title: 'Capacity review', text: 'Traffic shifted to healthy regions before peak load increase.', status: 'ok' },
+  { time: '14:10', title: 'Security scan', text: 'A blocked vulnerability was remediated before any external exposure.', status: 'watch' },
+  { time: '17:40', title: 'Automation run', text: 'Backlog processing improved by 31% after policy optimization.', status: 'ok' },
+];
+
+const plans = [
+  { name: 'Starter', price: '$29', description: 'For small teams building a reliable foundation.', features: ['1 workspace', 'Basic automation', 'Email alerts', 'Standard security'] },
+  { name: 'Scale', price: '$79', description: 'Advanced control for product and operations teams.', features: ['Unlimited workspaces', 'Predictive insights', 'Custom policies', 'Priority support'], popular: true },
+  { name: 'Enterprise', price: '$149', description: 'Full governance, compliance, and resilience coverage.', features: ['Dedicated architecture', 'Private networking', 'Audit trails', '24/7 incident support'] },
+];
+
+export default function App() {
+  const [activeTab, setActiveTab] = useState('overview');
+  const [query, setQuery] = useState('');
+  const [securityMode, setSecurityMode] = useState('secure');
+
+  const filteredFeatures = useMemo(() => {
+    const selected = featureData[activeTab] ?? [];
+    if (!query.trim()) return selected;
+
+    return selected.filter(({ title, description, tag }) => {
+      const haystack = `${title} ${description} ${tag}`.toLowerCase();
+      return haystack.includes(query.toLowerCase());
+    });
+  }, [activeTab, query]);
+
+  return (
+    <div className={`app-shell ${securityMode === 'focus' ? 'is-focus' : ''}`}>
+      <header className="topbar">
+        <div className="brand-wrap">
+          <div className="brand-mark">N</div>
+          <div>
+            <div className="brand-name">Northstar</div>
+            <div className="brand-subtitle">Platform operations</div>
+          </div>
+        </div>
+
+        <nav className="main-nav" aria-label="Main navigation">
+          <a href="#">Overview</a>
+          <a href="#">Infrastructure</a>
+          <a href="#">Security</a>
+          <a href="#">Customers</a>
+        </nav>
+
+        <div className="top-actions">
+          <button className="ghost-btn" onClick={() => setSecurityMode((value) => (value === 'secure' ? 'focus' : 'secure'))}>
+            {securityMode === 'secure' ? 'Focus mode' : 'Secure mode'}
+          </button>
+          <button className="primary-btn">Launch workspace</button>
+        </div>
+      </header>
+
+      <main className="page-shell">
+        <section className="hero panel">
+          <div className="hero-copy">
+            <div className="eyebrow">Built for performance, trust, and scale</div>
+            <h1>Modern infrastructure with a sharper operating rhythm.</h1>
+            <p>
+              Manage workflows, risk, and delivery in one secure environment engineered for speed,
+              transparency, and operational confidence.
+            </p>
+
+            <div className="cta-row">
+              <button className="primary-btn large">Get started</button>
+              <button className="ghost-btn large">View live report</button>
+            </div>
+
+            <div className="hero-pills" aria-label="Key reliability stats">
+              <span>99.99% uptime</span>
+              <span>Zero-trust access</span>
+              <span>24/7 visibility</span>
+            </div>
+          </div>
+
+          <div className="hero-visual" aria-label="Operational analytics preview">
+            <div className="signal-card">
+              <div className="signal-header">
+                <span>System health</span>
+                <span className="live-dot">Live</span>
+              </div>
+
+              <div className="bar-chart" aria-hidden="true">
+                <span style={{ height: '34%' }} />
+                <span style={{ height: '48%' }} />
+                <span style={{ height: '62%' }} />
+                <span style={{ height: '58%' }} />
+                <span style={{ height: '71%' }} />
+                <span style={{ height: '84%' }} />
+                <span style={{ height: '96%' }} />
+              </div>
+
+              <div className="signal-footer">
+                <div>
+                  <strong>14.8k</strong>
+                  <small>Tasks completed</small>
+                </div>
+                <div>
+                  <strong>+18.4%</strong>
+                  <small>Efficiency gain</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="stats-grid" aria-label="Key performance metrics">
+          {metrics.map((metric) => (
+            <article key={metric.label} className="stat-card panel">
+              <div className="stat-label">{metric.label}</div>
+              <div className="stat-row">
+                <div className="stat-value">{metric.value}</div>
+                <span className={`delta ${metric.tone}`}>{metric.delta}</span>
+              </div>
+            </article>
+          ))}
+        </section>
+
+        <section className="insights panel">
+          <div className="section-header">
+            <div>
+              <div className="eyebrow">Operational overview</div>
+              <h2>Control center for modern delivery teams</h2>
+            </div>
+            <div className="search-box">
+              <span>⌕</span>
+              <input
+                type="text"
+                aria-label="Search capabilities"
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder="Search capabilities"
+              />
+            </div>
+          </div>
+
+          <div className="tab-row" role="tablist" aria-label="Functional areas">
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                role="tab"
+                aria-selected={activeTab === tab.id}
+                className={activeTab === tab.id ? 'tab active' : 'tab'}
+                onClick={() => setActiveTab(tab.id)}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          <div className="feature-grid">
+            {filteredFeatures.length > 0 ? (
+              filteredFeatures.map((feature) => (
+                <article key={feature.title} className="feature-card">
+                  <div className="feature-tag">{feature.tag}</div>
+                  <h3>{feature.title}</h3>
+                  <p>{feature.description}</p>
+                </article>
+              ))
+            ) : (
+              <div className="empty-state">No matching capability found for your search.</div>
+            )}
+          </div>
+        </section>
+
+        <section className="bottom-grid">
+          <div className="timeline panel">
+            <div className="section-header compact">
+              <div>
+                <div className="eyebrow">Recent activity</div>
+                <h2>Operational pulse</h2>
+              </div>
+            </div>
+
+            <div className="timeline-list">
+              {timeline.map((entry) => (
+                <div key={`${entry.time}-${entry.title}`} className="timeline-item">
+                  <div className="timeline-time">{entry.time}</div>
+                  <div className={`timeline-bullet ${entry.status}`} />
+                  <div className="timeline-content">
+                    <h3>{entry.title}</h3>
+                    <p>{entry.text}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="summary panel">
+            <div className="section-header compact">
+              <div>
+                <div className="eyebrow">Production summary</div>
+                <h2>Performance snapshot</h2>
+              </div>
+            </div>
+
+            <div className="mini-stat">
+              <span>Response quality</span>
+              <strong>96.4%</strong>
+            </div>
+            <div className="mini-stat">
+              <span>Escalation rate</span>
+              <strong>0.8%</strong>
+            </div>
+            <div className="mini-stat">
+              <span>Mean time to recovery</span>
+              <strong>12 min</strong>
+            </div>
+            <div className="mini-stat">
+              <span>Automation success</span>
+              <strong>94.7%</strong>
+            </div>
+          </div>
+        </section>
+
+        <section className="pricing panel">
+          <div className="section-header compact">
+            <div>
+              <div className="eyebrow">Flexible plans</div>
+              <h2>Choose the operating model that matches your growth</h2>
+            </div>
+          </div>
+
+          <div className="pricing-grid">
+            {plans.map((plan) => (
+              <article key={plan.name} className={plan.popular ? 'price-card popular' : 'price-card'}>
+                <div className="plan-name-row">
+                  <h3>{plan.name}</h3>
+                  {plan.popular && <span className="popular-badge">Popular</span>}
+                </div>
+                <div className="plan-price">
+                  {plan.price}
+                  <span>/mo</span>
+                </div>
+                <p>{plan.description}</p>
+                <ul>
+                  {plan.features.map((feature) => (
+                    <li key={feature}>{feature}</li>
+                  ))}
+                </ul>
+                <button className={plan.popular ? 'primary-btn' : 'ghost-btn'}>Choose plan</button>
+              </article>
+            ))}
+          </div>
+        </section>
+      </main>
+    </div>
+  );
+}
